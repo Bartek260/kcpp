@@ -13,8 +13,9 @@
 
 #include <array>
 #include <iostream>
-#include <iterator>
-#include <span>
+// #include <iterator>
+// #include <span>
+#include <vector>
 using namespace std;
 
 /**
@@ -47,7 +48,7 @@ void przekaz1DA(int tab[]) {
   cout << endl << "*** Przekaz1DA ---------------------------" << endl;
   int iSize = sizeof(&tab) / sizeof(tab[0]); // Incorrect size calculation
   cout << "Size: " << iSize << endl;
-  for (int i = 0; i <= iSize; i++) {
+  for (int i = 0; i < iSize; i++) {
     cout << tab[i] << " ";
   }
   cout << endl;
@@ -105,14 +106,14 @@ void przekazTabSizeArray(const array<int, 6> &arr) {
  * @brief The modern way to handle arrays and maintain size information
  * */
 /* void przekazTabSizeSpan(span<int> s) {
- *   cout << endl << "*** PrzekazTabSizeSpan ---------------------------" <<
- * endl; for (auto elem : s) { cout << elem << " ";
- *   }
- *   cout << endl;
- *   // TODO: add c++20 support to vim compilation. Meanwhile compile via
- * command
- *   // line: -std=c++20
- * } */
+  cout << endl << "*** PrzekazTabSizeSpan ---------------------------" << endl;
+  for (auto elem : s) {
+    cout << elem << " ";
+  }
+  cout << endl;
+  // TODO: add c++20 support to vim compilation. Meanwhile compile via command
+  // line: -std=c++20
+} */
 
 /**
  * @brief Function to pass a 2D array
@@ -122,11 +123,26 @@ void przekazTabSizeArray(const array<int, 6> &arr) {
  * The array is not copied - we pass it by reference.
  */
 template <typename T, int tabSize>
-void przekazTabSizeA(const T (&tablica)[tabSize]) {
-  cout << endl << "*** PrzekazTabSizeA ---------------------------" << endl;
+void przekazTabSizeTemplate(const T (&tablica)[tabSize]) {
+  cout << endl << "*** PrzekazTabSizeTemplate ------------------------" << endl;
   cout << "(inside function) Rozmiar tablicy: " << tabSize << endl;
   for (int i = 0; i < tabSize; ++i) {
     cout << tablica[i] << " ";
+  }
+  cout << endl;
+}
+
+/**
+ * @brief Function to pass a vector instead of array
+ * zaleca się używanie kontenera std::vector, który „pamięta” swój rozmiar i
+ * jest bezpieczniejszy.
+ */
+void przekaz1DVector(const std::vector<int> &v) {
+  cout << endl << "*** przekaz1DVector (Vector) ------------------" << endl;
+  cout << "Size: " << v.size() << endl;
+
+  for (int element : v) {
+    cout << element << " ";
   }
   cout << endl;
 }
@@ -144,7 +160,7 @@ int main() {
   int tablica1D[6] = {1, 2, 3, 4, 5, 6};
   int iSize =
       sizeof(&tablica1D) / sizeof(tablica1D[0]); // Incorrect size calculation
-  cout << "Size of the array: " << iSize << endl;
+  cout << "Size of the array(?): " << iSize << endl;
 
   // Pass 1D array by value
   przekaz1D(tablica1D);
@@ -166,15 +182,33 @@ int main() {
   // Pass 2D array
   przekaz2D(tablica2D);
 
+  //------ Array ----------------------------------------------------
   array<int, 6> tablica1DB = {1, 2, 3, 4, 5, 6};
   // Use std::array (C++11 or later)
   przekazTabSizeArray(tablica1DB);
 
-  /* // Use std:span (C++20 or later)
-   * przekazTabSizeSpan(tablica1DB); */
+  //------ Span -----------------------------------------------------
+  // Use std:span (C++20 or later)
+  // przekazTabSizeSpan(tablica1DB);
 
   // The most classic method that preserves the size of the array
-  przekazTabSizeA(tablica1D);
+  przekazTabSizeTemplate(tablica1D);
+
+  //------ Vector ---------------------------------------------------
+  // Use std::vector
+  // Inicjalizacja wektora listą wartości (C++11 i nowsze)
+  vector<int> liczby = {10, 20, 30, 40, 50};
+  /* vector<int> liczby;
+  for (int i = 0; i < 10; ++i) {
+    liczby.push_back(i);
+  } */
+
+  // Wywołanie funkcji
+  przekaz1DVector(liczby);
+
+  // Można też dodać elementy dynamicznie przed wywołaniem
+  liczby.push_back(60);
+  przekaz1DVector(liczby);
 
   return 0;
 }
