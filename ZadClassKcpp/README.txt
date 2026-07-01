@@ -14,11 +14,3 @@ Wybrane zadania:
 5.2  Struktura Student
 5.6  Klasa abstrakcyjna Figura
 
-Kompilacja:
-make
-
-Uruchomienie:
-make run
-
-Czyszczenie:
-make clean
